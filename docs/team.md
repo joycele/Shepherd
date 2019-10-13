@@ -6,8 +6,8 @@ title:  Team
 # {{ page.title }}
 
 
-## USER 1
-***UCI Net ID***: ucinetid1
+## Joyce Le
+***UCI Net ID***: lejy
 
 ## USER 2
 ***UCI Net ID***: ucinetid2
