@@ -1,3 +1,3 @@
-# Sheperd
+# Shepherd
 Minecraft AI Project Herding Sheep
 
