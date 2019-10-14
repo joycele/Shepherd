@@ -9,8 +9,8 @@ title:  Team
 ## Joyce Le
 ***UCI Net ID***: lejy
 
-## USER 2
-***UCI Net ID***: ucinetid2
+## Mario Gomez
+***UCI Net ID***: gomezms
 
 ## USER 3
 ***UCI Net ID***: ucinetid3
