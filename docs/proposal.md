@@ -14,5 +14,5 @@ We will evaluate the quantitative success of our project by counting the number 
 
 The qualitative analysis we will use to verify that our project works will be to see if our agent is able to successfully find sheep and herd it into the corral with direction. It should not be chasing/leading sheep around aimlessly, and after it has herded its last sheep, it should go immediately to find the next sheep instead of walking around randomly. We will visualize the inner workings of our algorithm by starting off with smaller test cases first (ie. large amounts of sheep first to simplify search, simple terrain, large enough corral), and increasing the difficulty once we ensure that our algorithm is doing its job.
 
-
+<br/><br/>
 Appointment with Instructor: Thursday October 24, 5:10pm @ DBH 4204
