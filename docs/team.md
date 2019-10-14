@@ -12,5 +12,5 @@ title:  Team
 ## Mario Gomez
 ***UCI Net ID***: gomezms
 
-## USER 3
+## Yue Yu
 ***UCI Net ID***: yuy31
