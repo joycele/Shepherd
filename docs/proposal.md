@@ -3,7 +3,7 @@ layout: default
 title: Proposal
 ---
 
-## Shepherd: Project Summary
+## Project Summary
 For our project, we are essentially training a Malmo Agent to be Shepherd. The agent will be dropped into an initially flat world and will be faced with a variable amount of sheep to herd. The agent will do this by luring the sheep into a specially designed enclosure. Our AI will take in information about sheep positions and a destination (the corral), and produce a series of actions to bring as many sheep as possible into the corral.
 
 ## AI/ML Algorithms
