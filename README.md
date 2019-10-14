@@ -1,2 +1,3 @@
-# g-unit
-Minecraft AI Project
+# Sheperd
+Minecraft AI Project Herding Sheep
+
