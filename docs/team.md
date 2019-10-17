@@ -13,4 +13,4 @@ title:  Team
 ***UCI Net ID***: gomezms
 
 ## Yue Yu
-***UCI Net ID***: yuy31
+***UCI Net ID***: yuy31 --name change
