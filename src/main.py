@@ -73,7 +73,7 @@ if __name__ == "__main__":
         print()
         print("Shepherd location:", shepherd.agent_location())
         print("Sheep locations:", shepherd.sheep_location())
-        print("Shepherd in pen:", shepherd.agent_in_pen())
+        print("Shepherd in pen:", shepherd.end_mission())
         print("Sheep in pen:", shepherd.sheep_in_pen())
 
         print()
@@ -83,4 +83,3 @@ if __name__ == "__main__":
         # Mission has ended.
         
     print("Completed all runs.")
-

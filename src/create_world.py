@@ -67,7 +67,8 @@ def getMissionXML(summary):
                     <!-- Spawn random sheep and lava blocks -->
                     ''' + getSpawnerBlocks() + '''
                 </DrawingDecorator>
-                <ServerQuitFromTimeUp timeLimitMs="30000"/>
+                <!-- Commented to simplify testing -->
+                <!-- <ServerQuitFromTimeUp timeLimitMs="30000"/>-->
                 <ServerQuitWhenAnyAgentFinishes />
             </ServerHandlers>
         </ServerSection>
@@ -87,10 +88,9 @@ def getMissionXML(summary):
                     <Range name="entities" xrange="60" yrange="2" zrange="60" />
                 </ObservationFromNearbyEntities>
                 <InventoryCommands/>
-                <AgentQuitFromTouchingBlockType>
-                    <Block type="diamond_block" />
-                </AgentQuitFromTouchingBlockType>
+                <MissionQuitCommands/>
                 <ObservationFromFullStats/>
+                <ObservationFromHotBar/>
             </AgentHandlers>
         </AgentSection>
     </Mission>
