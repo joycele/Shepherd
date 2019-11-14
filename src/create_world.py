@@ -5,6 +5,9 @@
 
 import random
 
+NUMBER_OF_SHEEP = 2
+
+
 # Draw the flowing lava blocks randomly in the arena
 def getLavaBlocks():
     xml=""
@@ -19,8 +22,7 @@ def getLavaBlocks():
 # Draw the Sheep spawner blocks randomly in the arena
 def getSpawnerBlocks():
     xml=""
-    number_of_sheep = 2
-    for item in range(number_of_sheep):
+    for item in range(NUMBER_OF_SHEEP):
         x = str(random.randint(-60 / 2, 60 / 2))
         z = str(random.randint(-60 / 2, 60 / 2))
         xml += '''<DrawEntity x="''' + x + '''" y="207" z="''' + z + '''" type="Sheep"/>'''
@@ -33,6 +35,9 @@ def getMissionXML(summary):
         <About>
             <Summary>''' + summary + '''</Summary>
         </About>
+        <ModSettings>
+            <MsPerTick>20</MsPerTick>
+        </ModSettings>
         <ServerSection>
             <ServerInitialConditions>
                 <Time>
@@ -68,14 +73,14 @@ def getMissionXML(summary):
                     ''' + getSpawnerBlocks() + '''
                 </DrawingDecorator>
                 <!-- Commented to simplify testing -->
-                <!-- <ServerQuitFromTimeUp timeLimitMs="30000"/>-->
+                <ServerQuitFromTimeUp timeLimitMs="30000"/>
                 <ServerQuitWhenAnyAgentFinishes />
             </ServerHandlers>
         </ServerSection>
         <AgentSection mode="Survival">
             <Name>Jesus</Name>
             <AgentStart>
-                <Placement x="0.5" y="207.0" z="0.5" pitch="30" yaw="0"/>
+                <Placement x="0.5" y="207.0" z="0.5" pitch="30" yaw="90"/>
                 <Inventory>
                     <InventoryItem slot="1" type="wheat"/>
                 </Inventory>

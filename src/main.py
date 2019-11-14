@@ -36,8 +36,9 @@ if __name__ == "__main__":
         exit(0)
 
     shepherd = Shepherd()
-    runs = 1
+    runs = 200
     for i in range(runs):
+        print("run " + str(i))
         mission_XML = farm.getMissionXML("Sheep Apocalypse #" + str(i+1))
         my_mission = MalmoPython.MissionSpec(mission_XML, True)
         my_mission_record = MalmoPython.MissionRecordSpec()
@@ -83,3 +84,5 @@ if __name__ == "__main__":
         # Mission has ended.
         
     print("Completed all runs.")
+
+
