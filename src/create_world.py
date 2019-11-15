@@ -3,10 +3,9 @@
 # Spawn sheep in random locations on a farm
 # (later) spawn lava blocks in random locations
 
-import random
+import random, math
 
 NUMBER_OF_SHEEP = 2
-
 
 # Draw the flowing lava blocks randomly in the arena
 def getLavaBlocks():
@@ -18,16 +17,18 @@ def getLavaBlocks():
         xml += '''<DrawBlock x="''' + x + '''" y="207" z="''' + z + '''" type="flowing_lava"/>'''
     return xml
 
-
 # Draw the Sheep spawner blocks randomly in the arena
 def getSpawnerBlocks():
     xml=""
-    for item in range(NUMBER_OF_SHEEP):
-        x = str(random.randint(-60 / 2, 60 / 2))
-        z = str(random.randint(-60 / 2, 60 / 2))
-        xml += '''<DrawEntity x="''' + x + '''" y="207" z="''' + z + '''" type="Sheep"/>'''
+    positions = []
+    angle = 2*math.pi/(NUMBER_OF_SHEEP)
+    for i in range(NUMBER_OF_SHEEP):
+        x = int(6*math.sin(i*angle))
+        y = int(6*math.cos(i*angle))
+        positions.append((x, y))
+    for p in positions:
+        xml += '''<DrawEntity x="''' + str(p[0]) + '''" y="207" z="''' + str(p[1])  + '''" type="Sheep"/>'''
     return xml
-
 
 def getMissionXML(summary):
     return '''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
@@ -36,7 +37,7 @@ def getMissionXML(summary):
             <Summary>''' + summary + '''</Summary>
         </About>
         <ModSettings>
-            <MsPerTick>20</MsPerTick>
+            <MsPerTick>5</MsPerTick>
         </ModSettings>
         <ServerSection>
             <ServerInitialConditions>

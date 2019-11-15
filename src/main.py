@@ -25,6 +25,9 @@ if __name__ == "__main__":
     # Create default Malmo objects:
 
     agent_host = MalmoPython.AgentHost()
+    my_client_pool = MalmoPython.ClientPool()
+    my_client_pool.add(MalmoPython.ClientInfo("127.0.0.1", 10000))
+
     try:
         agent_host.parse( sys.argv )
     except RuntimeError as e:
@@ -38,7 +41,6 @@ if __name__ == "__main__":
     shepherd = Shepherd()
     runs = 200
     for i in range(runs):
-        print("run " + str(i))
         mission_XML = farm.getMissionXML("Sheep Apocalypse #" + str(i+1))
         my_mission = MalmoPython.MissionSpec(mission_XML, True)
         my_mission_record = MalmoPython.MissionRecordSpec()
@@ -47,7 +49,7 @@ if __name__ == "__main__":
         max_retries = 3
         for retry in range(max_retries):
             try:
-                agent_host.startMission( my_mission, my_mission_record )
+                agent_host.startMission(my_mission, my_client_pool, my_mission_record, 0, "JESUS")
                 break
             except RuntimeError as e:
                 if retry == max_retries - 1:
@@ -74,7 +76,6 @@ if __name__ == "__main__":
         print()
         print("Shepherd location:", shepherd.agent_location())
         print("Sheep locations:", shepherd.sheep_location())
-        print("Shepherd in pen:", shepherd.end_mission())
         print("Sheep in pen:", shepherd.sheep_in_pen())
 
         print()

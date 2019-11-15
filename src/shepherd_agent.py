@@ -1,43 +1,30 @@
-# shepherd_agent.py
-
-# Shepherd class used to keep track of the agent
-#   class methods:
-#     - get_current_state
-#     - agent_location
-#     - sheep_location
-#     - sheep_in_pen
-#     - sheep_are_near
-#     - end_mission
-#     - update_q_table
-#     - movement_towards_pen
-#     - choose_action
-#     - act (do an action)
-#     - run (run the agent)
-
 import random, json, sys, time
 from collections import defaultdict, deque
 from create_world import NUMBER_OF_SHEEP
 from math import sqrt
 
+# shepherd_agent.py
+# Shepherd class used to keep track of the agent
 class Shepherd():
     #NOTE: Need penalty for death eventually
+    #TODO: Improve reward distribution
     rewards_ledger = {
-        "per sheep herded": 1,
-        "all sheep herded": 100,
+        "sheep are near": 4,
+        "some sheep herded": 25,
+        "all sheep herded": 10000,
         "no sheep herded": -100,
         "pen not reached": -150
     }
 
     def __init__(self, alpha=0.3, gamma=1, n=1):
         """Constructing an RL agent.
-
         Args
             alpha:  <float>  learning rate      (default = 0.3)
             gamma:  <float>  value decay rate   (default = 1)
             n:      <int>    number of back steps to update (default = 1)
         """
         # q-learning variables
-        self.epsilon = 0.2 # chance of taking a random action instead of the best
+        self.epsilon = 0.12 # chance of taking a random action instead of the best
         self.q_table = {}
         self.n, self.alpha, self.gamma = n, alpha, gamma
         
@@ -49,18 +36,22 @@ class Shepherd():
         self.possible_actions = {0: "move 0.5", 1: "move -0.5", 2: "strafe 0.5", 3: "strafe -0.5",
                                  4: "hotbar.2 1", 5: "hotbar.1 1"}
 
+    '''     STATE OBSERVATION METHODS       '''
+
     def state_to_reward(self, state):
         current_r = 0
         christ_x, christ_z = self.location
         sheep_saved = self.sheep_in_pen()
         # Check if Shepherd made it to pen
-        if christ_x < 30 and -10 < christ_z < 10:
+        if not self.agent_in_pen():
             current_r += self.rewards_ledger["pen not reached"]
+        if self.sheep_are_near():
+            current_r += self.rewards_ledger["sheep are near"]
         # Check how many sheep were saved
         if sheep_saved == 0:
             current_r += self.rewards_ledger["no sheep herded"]
         elif sheep_saved < NUMBER_OF_SHEEP:
-            current_r += self.rewards_ledger["no sheep herded"]
+            current_r += self.rewards_ledger["some sheep herded"]
         elif sheep_saved == NUMBER_OF_SHEEP:
             current_r += self.rewards_ledger["all sheep herded"]
         return current_r
@@ -87,15 +78,24 @@ class Shepherd():
 
         # State for Q-table is defined as ( AVG_DIST, MISS_END ) where
     
-    #   - AVG_DIST = Average distance in blocks between Agent and each sheep
-    #   - MISS_END = Distance between agent and mission termination frontier)
+    # TODO: Add states to penalize distance from pen on discrete scale
     def get_q_state(self):
-        int_christ_loc = self.location
-        distance_sum  = 0
-        for sheepy in self.sheep:
-            distance_sum = self.dist_to_entity(sheepy)
-        avg_distance = distance_sum / len(self.sheep)
-        return (round(self.dist_to_mission_end()), round(avg_distance))
+        state_def = []
+        sheep_saved = self.sheep_in_pen()
+        if self.sheep_are_near():
+            state_def.append("sheep are near")
+        if not self.agent_in_pen():
+            state_def.append("pen not reached")
+        if sheep_saved == 0:
+           state_def.append("no sheep herded")
+        elif sheep_saved < NUMBER_OF_SHEEP:
+            state_def.append("some sheep herded")
+        elif sheep_saved == NUMBER_OF_SHEEP:
+            state_def.append("all sheep herded")
+        return tuple(state_attr for state_attr in state_def)
+                
+
+    '''     STATE OBSERVATION UTILITY METHODS       '''
 
     def agent_location(self):
         return self.location
@@ -103,7 +103,6 @@ class Shepherd():
     def sheep_location(self):
         return self.sheep
 
-    # Determine if there are sheep within the Pen's coordinates        
     def sheep_in_pen(self):
         count = 0
         for coord in self.sheep:
@@ -112,15 +111,17 @@ class Shepherd():
                 count += 1
         return count
 
-    # Utility function to find distance to entity from Agent
-    # Will be used in state calculation and sheep_are_near
+    def agent_in_pen(self):
+        x,z = self.location
+        return (29 < x < 50 and -10 < z < 10)
+
+    # Find distance to entity from Agent
     def dist_to_entity(self, ent):
         sheep_x, sheep_z = ent
         christ_x, christ_z = self.location
         return sqrt(pow(sheep_x - christ_x, 2) + pow(sheep_z - christ_z, 2))
 
-    # Utiliity function to find distance to mission termination from Agent
-    # Will be used in state calculation
+    # Find distance to mission termination from Agent
     def dist_to_mission_end(self):
         x,z = self.location
         if x < 0:
@@ -138,25 +139,16 @@ class Shepherd():
     
     # End the mission after traveling to mission frontier within the pen 
     # (40th column of blocks east of arena's center block and inside of Pen borders)
-    def end_mission(self):
+    def end_mission(self, world_state):
         x,z = self.location
-        return 39 < x < 50 and -10 < z < 10
+        return (39 < x < 50 and -10 < z < 10) or not world_state.is_mission_running
 
-    # Put agent on path towards the pen
-    def movement_towards_pen(self):
-        movement = ""
-        x,z = self.location
-        if -10 < z < 10:
-            movement = self.possible_actions[1]
-        elif z < 10:
-            movement = self.possible_actions[2]
-        elif z > -10:
-            movement = self.possible_actions[3]
-        return movement
+    #TODO: implement
+    def best_policy(self, agent_host):
+        return
 
     def update_q_table(self, tau, S, A, R, T): # got from assignment 2
         """Performs relevant updates for state tau.
-
         Args
             tau: <int>  state index to update
             S:   <dequqe>   states queue
@@ -172,14 +164,30 @@ class Shepherd():
         old_q = self.q_table[curr_s][curr_a]
         self.q_table[curr_s][curr_a] = old_q + self.alpha * (G - old_q)
     
+        # Put agent on path towards the pen
+    
+
+    '''     HIGH LEVEL AGENT COMMANDS       '''
+
+    def movement_towards_pen(self):
+        movement = ""
+        x,z = self.location
+        if -10 < z < 10:
+            movement = self.possible_actions[1]
+        elif z < 10:
+            movement = self.possible_actions[2]
+        elif z > -10:
+            movement = self.possible_actions[3]
+        return movement
+
+
+    '''     AGENT DELIBERATION      '''
+    
     # Return actions available at a given state
+    # TODO: Fix so that some actions are not allowed at certain states
+    #   Ex: wheat with no sheep around, leaving with no wheat in hand?? 
     def get_possible_actions(self):
-        # Check if actions are allowable or not recommended 
-        # (e.g. drawing wheat when no sheep are near, walking to the pen without wheat drawn)
-        if self.sheep_are_near():
-            return [act for _id, act in self.possible_actions.items()]
-        else:
-            return [act for _id, act in self.possible_actions.items() if act != "hotbar.2 1"]
+        return [act for _id, act in self.possible_actions.items()]
 
     def choose_action(self,state,possible_actions):
         curr_state = self.get_q_state()
@@ -205,7 +213,7 @@ class Shepherd():
         return action    
     
     def act(self, agent_host, action):
-        if self.end_mission():
+        if self.end_mission(agent_host.getWorldState()):
             agent_host.sendCommand('quit')
             curr_state = self.get_q_state()
             return self.state_to_reward(curr_state)
@@ -214,32 +222,30 @@ class Shepherd():
             return 0
 
     def run(self, agent_host):
-        # self.get_current_state(agent_host)
-        # action = self.choose_action(self.epsilon)
-        # self.act(agent_host, action)
         S, A, R = deque(), deque(), deque()
         present_reward = 0
         done_update = False
         while not done_update:
-            self.get_current_state(agent_host)
             s0 = self.get_q_state()
             possible_actions = self.get_possible_actions()
             a0 = self.choose_action(s0, possible_actions)
             S.append(s0)
             A.append(a0)
             R.append(0)
-
             T = sys.maxsize
+
             for t in range(sys.maxsize):
                 time.sleep(0.1)
+                world_state = agent_host.getWorldState()
+                self.get_current_state(agent_host)
                 if t < T:
                     current_r = self.act(agent_host, A[-1])
                     R.append(current_r)
-
-                    if self.end_mission():
-                        # Terminating state
+                    
+                    if self.end_mission(world_state):
                         T = t + 1
                         S.append('Term State')
+                        print(S)
                         present_reward = current_r
                         print("Reward:", present_reward)
                     else:
@@ -259,5 +265,4 @@ class Shepherd():
                         self.update_q_table(tau, S, A, R, T)
                     done_update = True
                     break
-    
     
