@@ -11,7 +11,7 @@ Reports:
 - [Status](status.html)
 - [Final](final.html)
 
-![shepherd header](../img/shepherd_minecraft.png)
+![shepherd header](../img/shepo.png)
 
 # Making a Minecraft Shepherd
 The goal of this project is to leverage Machine Learning methods to teach a Minecraft avatar how to herd sheep
