@@ -18,16 +18,17 @@ def getLavaBlocks():
     return xml
 
 # Draw the Sheep spawner blocks randomly in the arena
-def getSpawnerBlocks():
+def drawSheep():
     xml=""
     positions = []
-    angle = 2*math.pi/(NUMBER_OF_SHEEP)
-    for i in range(NUMBER_OF_SHEEP):
-        x = int(6*math.sin(i*angle))
-        y = int(6*math.cos(i*angle))
-        positions.append((x, y))
-    for p in positions:
-        xml += '''<DrawEntity x="''' + str(p[0]) + '''" y="207" z="''' + str(p[1])  + '''" type="Sheep"/>'''
+    # angle = 2*math.pi/(NUMBER_OF_SHEEP)
+    # for i in range(NUMBER_OF_SHEEP):
+    #     x = int(6*math.sin(i*angle))
+    #     y = int(6*math.cos(i*angle))
+    #     positions.append((x, y))
+    # for p in positions:
+    xml += '''<DrawEntity x="-18" y="207" z="0" type="Sheep"/>'''
+    xml += '''<DrawEntity x="-18" y="207" z="15" type="Sheep"/>'''
     return xml
 
 def getMissionXML(summary):
@@ -37,7 +38,7 @@ def getMissionXML(summary):
             <Summary>''' + summary + '''</Summary>
         </About>
         <ModSettings>
-            <MsPerTick>5</MsPerTick>
+            <MsPerTick>15</MsPerTick>
         </ModSettings>
         <ServerSection>
             <ServerInitialConditions>
@@ -63,18 +64,11 @@ def getMissionXML(summary):
                     <DrawLine x1="50" y1="206" z1="10" x2="50" y2="206" z2="-10" type="fence"/>
                     <DrawLine x1="50" y1="206" z1="10" x2="30" y2="206" z2="10" type="fence"/>
                     <DrawLine x1="30" y1="206" z1="-10" x2="50" y2="206" z2="-10" type="fence"/>
-                    <!-- Put some cows, pigs, chickens in there because it's a farm and it's cute-->
-                    <DrawEntity x="37" y="206" z="0" type="Cow"/>
-                    <DrawEntity x="42" y="206" z="-5" type="Pig"/>
-                    <DrawEntity x="33" y="206" z="-3" type="Chicken"/>
-                    <DrawEntity x="45" y="206" z="3" type="Chicken"/>
-                    <DrawEntity x="35" y="206" z="5" type="Pig"/>
                                         
                     <!-- Spawn random sheep and lava blocks -->
-                    ''' + getSpawnerBlocks() + '''
+                    ''' + drawSheep() + '''
                 </DrawingDecorator>
-                <!-- Commented to simplify testing -->
-                <ServerQuitFromTimeUp timeLimitMs="30000"/>
+                <ServerQuitFromTimeUp timeLimitMs="45000"/>
                 <ServerQuitWhenAnyAgentFinishes />
             </ServerHandlers>
         </ServerSection>
@@ -83,13 +77,12 @@ def getMissionXML(summary):
             <AgentStart>
                 <Placement x="0.5" y="207.0" z="0.5" pitch="30" yaw="90"/>
                 <Inventory>
-                    <InventoryItem slot="1" type="wheat"/>
+                    <InventoryItem slot="0" type="wheat"/>
                 </Inventory>
             </AgentStart>
             <AgentHandlers>
                 <ChatCommands/>
-                <ContinuousMovementCommands turnSpeedDegs="480"/>
-                <AbsoluteMovementCommands/>
+                <ContinuousMovementCommands/>
                 <ObservationFromNearbyEntities>
                     <Range name="entities" xrange="60" yrange="2" zrange="60" />
                 </ObservationFromNearbyEntities>
