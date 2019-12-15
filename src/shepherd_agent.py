@@ -65,7 +65,32 @@ class Shepherd():
         """
         # q-learning variables
         self.epsilon = 0.18 # chance of taking a random action instead of the best
-        self.q_table = {}
+        self.q_table = { (0, 2, 0, 0) : {'pen': -7.5597899240816435, 'sheep_0': -7.6853831842439355, 'sheep_1': -8.603556212495494},\
+            (0, 1, 0, 0) : {'sheep_0': -7.914284748856445, 'sheep_1': -6.021899688886062, 'pen': -8.172103098091144},\
+            (0, 2, 1, 0) : {'sheep_1': -9.519268514588026, 'pen': -7.541436934529407, 'sheep_0': -19.190134333978285},\
+            (1, 2, 1, 0) : {'sheep_1': -6.295540809121916, 'pen': -6.663798077391407, 'sheep_0': -7.706357104494696},\
+            (0, 2, 2, 0) : {'pen': -6.7362059984981375},\
+            (1, 2, 2, 0) : {'pen': -4.524126885537593},\
+            (0, 1, 2, 0) : {'pen': -5.352840163953106},\
+            (0, 1, 1, 0) : {'pen': -7.281680241135881, 'sheep_1': -7.214801337052651, 'sheep_0': -12.675326924362164},\
+            (1, 2, 0, 0) : {'sheep_0': -4.639119372121955, 'sheep_1': -5.4904389518004555, 'pen': -6.236208769944893},\
+            (1, 1, 1, 0) : {'pen': -6.661158896780346, 'sheep_1': -27.52720206067534},\
+            (0, 0, 2, 0) : {'pen': -0.6088616588383906},\
+            (0, 0, 0, 1) : {'sheep_1': 0.2316381891188879, 'pen': -1.363710915727579, 'sheep_0': -0.8645627717216375},\
+            (1, 0, 0, 1) : {'sheep_0': 0.0, 'sheep_1': 0.0, 'pen': 0.0},\
+            (0, 0, 2, 1) : {'pen': -1.1182323155309408},\
+            (0, 0, 2, 2) : {'pen': -0.7403421624034879},\
+            (0, 0, 1, 2) : {'pen': -0.037150730105799404, 'sheep_0': 0.0},\
+            (0, 0, 0, 2) : {'sheep_1': -2.11923348338677, 'pen': -2.5176048617260456, 'sheep_0': -1.8733079246752578},\
+            (1, 1, 0, 0) : {'pen': -4.923332580332339, 'sheep_0': -4.822257952068439, 'sheep_1': -4.119083715535733},\
+            (0, 0, 0, 0) : {'sheep_1': -1.5746178358919596, 'pen': 0.5070032587347629, 'sheep_0': -1.9959794287289259},\
+            (0, 0, 1, 0) : {'sheep_1': -0.5839450798493717, 'pen': -0.9056753115917838},\
+            (0, 0, 1, 1) : {'sheep_1': -0.4312747536347856, 'pen': -1.9179809031739592},\
+            (1, 0, 1, 1) : {'sheep_1': 0.0, 'pen': 0.0}, \
+            (1, 0, 0, 0) : {'sheep_0': -0.3891005272029484, 'sheep_1': -0.19354045524592256, 'pen': -0.015750324608946445},\
+            (1, 1, 2, 0) : {'pen': -3.021376079772385},\
+            (1, 0, 0, 2) : {'pen': 0.0},\
+            (1, 0, 2, 2) : {'pen': -0.2580997354040565} }
         self.n, self.alpha, self.gamma = n, alpha, gamma
         
         # world and agent variables
@@ -229,6 +254,37 @@ class Shepherd():
     def end_mission(self, world_state):
         x,z = self.location
         return (39 < x < 50 and -10 < z < 10) or not world_state.is_mission_running
+    
+    def euclid_dist(self, a_x, a_z, b_x, b_z):
+        return sqrt(pow(b_x - a_x, 2) + pow(b_z - a_z, 2))
+
+    '''     HIGH LEVEL AGENT COMMANDS       '''
+
+    def head_to_pen(self):
+        movement = ""
+        x,z = self.location
+        if -10 < z < 10:
+            movement = self.possible_actions[1]
+        elif z < -10:
+            movement = self.possible_actions[3]
+        elif z > 10:
+            movement = self.possible_actions[2]
+        return movement
+
+    def head_to_sheep(self, sheep_coord):
+        movement = ""
+        x,z = self.location
+        sheep_x, sheep_z = sheep_coord
+        #NOTE: Will break if possible_actions attribute is altered 
+        move_results = [  
+            self.euclid_dist(x-1, z, sheep_x, sheep_z), \
+            self.euclid_dist(x+1, z, sheep_x, sheep_z), \
+            self.euclid_dist(x, z-1, sheep_x, sheep_z), \
+            self.euclid_dist(x, z+1, sheep_x, sheep_z)]
+        return self.possible_actions[move_results.index(min(move_results))]
+
+
+    '''     AGENT DELIBERATION      '''
 
     def best_policy(self, agent_host):
         current_r = 0
@@ -261,40 +317,7 @@ class Shepherd():
             
         old_q = self.q_table[curr_s][curr_a]
         self.q_table[curr_s][curr_a] = old_q + self.alpha * (G - old_q)
-    
-        # Put agent on path towards the pen
-    
-    def euclid_dist(self, a_x, a_z, b_x, b_z):
-        return sqrt(pow(b_x - a_x, 2) + pow(b_z - a_z, 2))
-
-    '''     HIGH LEVEL AGENT COMMANDS       '''
-
-    def head_to_pen(self):
-        movement = ""
-        x,z = self.location
-        if -10 < z < 10:
-            movement = self.possible_actions[1]
-        elif z < -10:
-            movement = self.possible_actions[3]
-        elif z > 10:
-            movement = self.possible_actions[2]
-        return movement
-
-    def head_to_sheep(self, sheep_coord):
-        movement = ""
-        x,z = self.location
-        sheep_x, sheep_z = sheep_coord
-        #NOTE: Will break if possible_actions attribute is altered 
-        move_results = [  
-            self.euclid_dist(x-1, z, sheep_x, sheep_z), \
-            self.euclid_dist(x+1, z, sheep_x, sheep_z), \
-            self.euclid_dist(x, z-1, sheep_x, sheep_z), \
-            self.euclid_dist(x, z+1, sheep_x, sheep_z)]
-        return self.possible_actions[move_results.index(min(move_results))]
-
-
-    '''     AGENT DELIBERATION      '''
-    
+        
     # Return actions available at a given state
     def get_possible_actions(self):
         actions = []
@@ -306,7 +329,6 @@ class Shepherd():
         actions.append("pen")
         return actions
 
-    #NOTE: random.choice and actions_by_reward might be fudging results
     def choose_action(self, state, possible_actions, eps):
         curr_state = self.get_q_state()
         if curr_state not in self.q_table:
@@ -339,6 +361,12 @@ class Shepherd():
             agent_host.sendCommand("quit")
             return self.state_to_reward(curr_state)
         else:
+            x,z = self.location
+            curr_state = self.get_q_state()
+            if x%0.5 != 0 or z%0.5 != 0:
+                command = "tp " + str(int(x) + 1.5) + " 207 " + str(int(z) + 0.5)
+                print(x,z,command)
+                agent_host.sendCommand(command)
             if action == "pen":
                 movement = self.head_to_pen()
                 agent_host.sendCommand(movement)

@@ -41,7 +41,7 @@ if __name__ == "__main__":
     shepherd = Shepherd()
     runs = 100
     for i in range(runs):
-        mission_XML = farm.getMissionXML("Sheep Apocalypse #" + str(i+1))
+        mission_XML = farm.getMission2XML("Sheep Apocalypse #" + str(i+1))
         my_mission = MalmoPython.MissionSpec(mission_XML, True)
         my_mission_record = MalmoPython.MissionRecordSpec()
 
@@ -70,12 +70,12 @@ if __name__ == "__main__":
         # Run shepherd agent until the mission is over
         shepherd.add_mission_stat_slot()
         while world_state.is_mission_running:
+            time.sleep(0.1)
             shepherd.run(agent_host)
             world_state = agent_host.getWorldState()
         # shepherd.print_mission_steps()
         shepherd.get_current_observations(agent_host)
-        time.sleep(1)
     print("Completed all runs.")
     print("Q-table after 100 runs")
     for state, actions in shepherd.q_table.items():
-        print(state,":",actions)
+        print(state,":",actions,",\\")
