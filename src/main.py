@@ -59,7 +59,7 @@ if __name__ == "__main__":
                     time.sleep(2)
 
         # Loop until mission starts:
-        print("Mission", i, end=" ")
+        print("Mission", i)
         world_state = agent_host.getWorldState()
         while not world_state.has_mission_begun:
             time.sleep(0.1)
@@ -75,6 +75,7 @@ if __name__ == "__main__":
             world_state = agent_host.getWorldState()
         # shepherd.print_mission_steps()
         shepherd.get_current_observations(agent_host)
+        # print(agent_host.getWorldState())
     print("Completed all runs.")
     print("Q-table after 100 runs")
     for state, actions in shepherd.q_table.items():

@@ -10,10 +10,28 @@ NUMBER_OF_SHEEP = 2
 # Draw the Sheep spawner blocks randomly in the arena
 def drawSheep():
     xml=""
-    positions = []
     xml += '''<DrawEntity x="-18" y="207" z="0" type="Sheep"/>'''
     xml += '''<DrawEntity x="-18" y="207" z="15" type="Sheep"/>'''
     return xml
+
+def drawMids():
+    return '''  <DrawBlock x="22" y="206" z="22" type="planks"/>
+                <DrawBlock x="22" y="206" z="7" type="planks"/>
+                <DrawBlock x="22" y="206" z="-7" type="planks"/>
+                <DrawBlock x="22" y="206" z="-22" type="planks"/>
+                <DrawBlock x="7" y="206" z="22" type="planks"/>
+                <DrawBlock x="7" y="206" z="7" type="planks"/>
+                <DrawBlock x="7" y="206" z="-7" type="planks"/>
+                <DrawBlock x="7" y="206" z="-22" type="planks"/>
+                <DrawBlock x="-7" y="206" z="22" type="planks"/>
+                <DrawBlock x="-7" y="206" z="7" type="planks"/>
+                <DrawBlock x="-7" y="206" z="-7" type="planks"/>
+                <DrawBlock x="-7" y="206" z="-22" type="planks"/>
+                <DrawBlock x="-22" y="206" z="22" type="planks"/>
+                <DrawBlock x="-22" y="206" z="7" type="planks"/>
+                <DrawBlock x="-22" y="206" z="-7" type="planks"/>
+                <DrawBlock x="-22" y="206" z="-22" type="planks"/>
+            '''
 
 def getMissionXML(summary):
     return '''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
@@ -106,9 +124,9 @@ def getMission2XML(summary):
                     <DrawCuboid x1="-30" y1="207" z1="-30" x2="30" y2="226" z2="30" type="air"/>
 
                     <!-- Draw Obstacles -->
-                    <DrawLine x1="-10" y1="206" z1="25" x2="10" y2="206" z2="15" type="lava"/>
-                    <DrawLine x1="28" y1="206" z1="18" x2="28" y2="206" z2="8" type="lava"/>
-                    <DrawLine x1="10" y1="206" z1="0" x2="25" y2="206" z2="0" type="lava"/>
+                    <DrawLine x1="-10" y1="206" z1="25" x2="10" y2="206" z2="15" type="lapis_block"/>
+                    <DrawLine x1="28" y1="206" z1="18" x2="28" y2="206" z2="8" type="lapis_block"/>
+                    <DrawLine x1="10" y1="206" z1="0" x2="25" y2="206" z2="0" type="lapis_block"/>
                     
                     <!-- Draw Herding Pen (Shepherd must go here to finish mission) -->
                     <DrawCuboid x1="30" y1="205" z1="10" x2="50" y2="217" z2="-10" type="air"/>
@@ -117,7 +135,7 @@ def getMission2XML(summary):
                     <DrawLine x1="50" y1="206" z1="10" x2="50" y2="206" z2="-10" type="fence"/>
                     <DrawLine x1="50" y1="206" z1="10" x2="30" y2="206" z2="10" type="fence"/>
                     <DrawLine x1="30" y1="206" z1="-10" x2="50" y2="206" z2="-10" type="fence"/>
-                                        
+                    ''' + drawMids() + '''                    
                     <!-- Spawn random sheep and lava blocks -->
                     ''' + drawSheep() + '''
                 </DrawingDecorator>
@@ -125,17 +143,17 @@ def getMission2XML(summary):
                 <ServerQuitWhenAnyAgentFinishes />
             </ServerHandlers>
         </ServerSection>
-        <AgentSection mode="Survival">
+        <AgentSection mode="Creative">
             <Name>Jesus</Name>
             <AgentStart>
-                <Placement x="0.5" y="207.0" z="0.5" pitch="30" yaw="90"/>
+                <Placement x="7.5" y="207.0" z="-7.5" pitch="30" yaw="90"/>
                 <Inventory>
                     <InventoryItem slot="0" type="wheat"/>
                 </Inventory>
             </AgentStart>
             <AgentHandlers>
                 <AgentQuitFromTouchingBlockType>
-                    <Block type="lava" />
+                    <Block type="lapis_block" />
                 </AgentQuitFromTouchingBlockType>
                 <ChatCommands/>
                 <DiscreteMovementCommands/>
