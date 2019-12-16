@@ -21,10 +21,10 @@ NUM_OF_EPISODE = 100
 MAX_RETRIES = 3
 BATCH_SIZE = 32
 ACTION_MAP = {
-    0: "move 1",
-    1: "move -1",
-    2: "strafe -1",
-    3: "strafe 1",
+    0: "move 0.25",
+    1: "move -0.25",
+    2: "strafe -0.25",
+    3: "strafe 0.25",
     4: "hotbar.1 1",
     5: "hotbar.2 1"
 }
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     observer = WorldObserver()
 
     # Load neuralnetwork model fomr directory
-    agent_net = models.load_model("./model-saved/0.h5")
+    agent_net = models.load_model("./model-saved/999.h5")
 
     print("Successfully load saved model!")
 
