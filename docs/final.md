@@ -38,6 +38,7 @@ While this approach resulted in more consistent and reliable results, it did not
 Our formal proposed approach is to implement a deep q-learning algorithm, in which we use a neural network to approximate the rewards for each of our states. The advantage of this over tabular q learning is the simplified state space, which grows exponentially larger with more sheep that we add to the world. With deep q learning, we simply keep track of a world grid and update the sheep and agent locations as we learn, passing it in to our neural network to learn the pattern of success. 
 
 Representation of world grid:
+
 ![World Grid](./img/world_grid.png)
 
 The pseudocode for our algorithm looks like the following:
