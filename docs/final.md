@@ -55,6 +55,27 @@ while world is running:
   mse loss = model.evaluate()
 ```
 
+For our neural network, we use the Keras library to build a model with 2 hidden layers and an input and output layer with state sizes correspinding to the size of our world grid. We then compile and build the model setting MSE as our loss function and adding in an optimizer:
+
+```python
+def _build_model(self):
+    # Neural Net for Deep-Q learning Model
+    model = Sequential()
+    # input layer passing in size of the world/farm
+    model.add(Dense(self.state_size, input_shape=(self.state_size,)))
+    # hidden layers
+    model.add(PReLU())
+    model.add(Dense(self.state_size))
+    model.add(PReLU())
+    model.add(Dense(self.state_size))
+    model.add(PReLU())
+    # output layer passing in size of the action space
+    model.add(Dense(self.action_size))
+    # build model
+    model.compile(loss='mse', optimizer='adam')
+    return model
+```
+
 We minimize our loss function based on the following formula used for q learning:
 ![MSE Loss](./img/mse.png)
 
