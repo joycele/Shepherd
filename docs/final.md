@@ -110,9 +110,9 @@ For qualitative results, we looked at how intelligently our agent was able to fa
 <br>
 
 ## Refrences 
-https://keon.io/deep-q-learning/?fbclid=IwAR0DftZDBhpV05C9wql3Yfu4GnI-T4G045xp3Q7lQhDDkvrkInenFRNKyRk
-https://medium.com/@gtnjuvin/my-journey-into-deep-q-learning-with-keras-and-gym-3e779cc12762
-https://www.learndatasci.com/tutorials/reinforcement-q-learning-scratch-python-openai-gym/?fbclid=IwAR3L9NSzKMn1NxB6P1LXjU69t9jsFoaVKsUxpJRSFPnN36doc1FJoa2A4hw
+[link1](https://keon.io/deep-q-learning/?fbclid=IwAR0DftZDBhpV05C9wql3Yfu4GnI-T4G045xp3Q7lQhDDkvrkInenFRNKyRk)
+[link2](https://medium.com/@gtnjuvin/my-journey-into-deep-q-learning-with-keras-and-gym-3e779cc12762)
+[link3](https://www.learndatasci.com/tutorials/reinforcement-q-learning-scratch-python-openai-gym/?fbclid=IwAR3L9NSzKMn1NxB6P1LXjU69t9jsFoaVKsUxpJRSFPnN36doc1FJoa2A4hw)
 
 
 
