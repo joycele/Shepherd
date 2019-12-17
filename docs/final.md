@@ -8,7 +8,7 @@ title: Final Report
 ### Project Summary
 The goal of this project is to use reinforcement learning methods to teach a Minecraft bot how to herd sheep. In particular, we chose to leverage tabular q-learning and deep q-learning to teach the agent how to efficiently gather a number of sheep in an arena and lead them to a designated pen on the outside of the arena. The reason for this is to bolster the difficulty of a trivial problem to one that requires methods and insights beyond that of a programmatic solution, much like a real world situation. More realistic situations could possibly include different kinds of terrain, time constraints; finishing before nightfall to avoid mobs, and larger distances. In the final phase of our project, we used a deterministic and discrete environment with sheep positions and map dimensions consistent. However, sheep behavior is technically dynamic for two reasons. They can be lured with wheat but can choose to ignore wheat. Sheep may also move around aimlessly and end up at different locations than where they were spawned.
 
-![Project Summary](./img/project_summary.img)
+![Project Summary](./img/project_summary.png)
 
 ### Approaches
 The baseline approach to solving this sheep herding problem is a greedy traveling-salesman problem, in which the agent knows the location of each sheep and visits each sheep in the fewest possible steps before luring all of them into the pen. An advantage of this greedy approach is the time that can be saved without the need for testing or training, as we can simply precompute the shortest path to each sheep and carry out the specified action movements until we have herded all the sheep. This approach works with 100% accuracy and requires no data, since it works strictly with the environment provided. A disadvantage, however, is that this approach does not actively learn from its environment and can be quite hard to optimize, as it is NP complete.
@@ -26,7 +26,7 @@ While the rewards system and overall state/action space design was well-intentio
 
 In the last half of the project, we redesigned the state and action space to use more stateful information; fractional coordinates. We divided the 60x60 block arena into a 4x4 grid. At each state the agent may transition to an available fractional coordinate, as seen in the picture below.
 
-![Environment Description](./img/env_description.img)
+![Environment Description](./img/env_description.png)
 
 The state and action space are as follows:
 States = {(x,z)}
@@ -38,7 +38,7 @@ While this approach resulted in more consistent and reliable results, it did not
 Our formal proposed approach is to implement a deep q-learning algorithm, in which we use a neural network to approximate the rewards for each of our states. The advantage of this over tabular q learning is the simplified state space, which grows exponentially larger with more sheep that we add to the world. With deep q learning, we simply keep track of a world grid and update the sheep and agent locations as we learn, passing it in to our neural network to learn the pattern of success. 
 
 Representation of world grid:
-![World Grid](./img/world_grid.img)
+![World Grid](./img/world_grid.png)
 
 The pseudocode for our algorithm looks like the following:
 ```
@@ -55,7 +55,7 @@ while world is running:
 ```
 
 We minimize our loss function based on the following formula used for q learning:
-![MSE Loss](./img/mse.img)
+![MSE Loss](./img/mse.png)
 
 ### Evaluation
 
