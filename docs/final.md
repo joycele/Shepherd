@@ -55,13 +55,14 @@ while world is running:
   mse loss = model.evaluate()
 ```
 
-For our neural network, we use the Keras library to build a model with 2 hidden layers and an input and output layer with state sizes correspinding to the size of our world grid. We then compile and build the model setting MSE as our loss function and adding in an optimizer:
+
+For our neural network, we use the Keras library to build a model with 2 hidden layers and an input and output layer with state sizes corresponding to the size of our world grid and the size of our action space. We then compile and build the model setting MSE as our loss function and adding in an optimizer:
 
 ```python
 def _build_model(self):
     # Neural Net for Deep-Q learning Model
     model = Sequential()
-    # input layer passing in size of the world/farm
+    # input layer using size of the world/farm
     model.add(Dense(self.state_size, input_shape=(self.state_size,)))
     # hidden layers
     model.add(PReLU())
@@ -69,17 +70,28 @@ def _build_model(self):
     model.add(PReLU())
     model.add(Dense(self.state_size))
     model.add(PReLU())
-    # output layer passing in size of the action space
+    # output layer using size of the action space
     model.add(Dense(self.action_size))
     # build model
     model.compile(loss='mse', optimizer='adam')
     return model
 ```
 
+
 We minimize our loss function based on the following formula used for q learning:
+
 ![MSE Loss](./img/mse.png)
 
 ### Evaluation
+For our evaluation setup, we quantified the success of our agent based on the average awards it earned during its training, the number of times it was successfully able to herd sheep into the pen, and its history of MSE loss. 
+
+Awards were given based on distance calculated between the agent and each sheep and the distance between each sheep to the pen. Each of these calculated Euclidean distances were awarded as negative points for the agent, with the negativity decreasing as either the agent got closer to the sheep or the sheep got closer to the pen. We additionally gave out negative rewards for actions that led to an unchanging agent location. We awarded +100 for each sheep that our agent is able to stay near whilst herding, defined by us as 4 blocks euclidean distance-wise away, +200 if the agent reached the pen with sheep in tow, and +1000 for each sheep that successfully makes its way into the herding pen. 
+
+The number of times our agent "wins" was also a clear evaluation criteria we imposed on our agent. We defined winning as sheep being herded into the pen, with the winning score proportional to the number of sheep in the pen. If the agent ended in the pen with no sheep to follow, the winning score is still a 0, counting as a loss.
+
+For qualitative results, we looked at how intelligently our agent was able to factor in sheep distance compared to distance to pen. We also looked at how our agent was able to handle herding multiple sheep--whether it settled for a smaller reward of only bringing one sheep per mission, or if it tried to herd all the sheep in the world at once and herd them in together for a larger sum reward. Our agent opted for smaller rewards herding less sheep most of the time, most likely because we put a time constraint of 35s to finish each mission run. Overall, we saw this as a success in that the agent was still able to perform the baseline task of herding a sheep into a pen. 
+
+
 
 ### Refrences 
 https://keon.io/deep-q-learning/?fbclid=IwAR0DftZDBhpV05C9wql3Yfu4GnI-T4G045xp3Q7lQhDDkvrkInenFRNKyRk
