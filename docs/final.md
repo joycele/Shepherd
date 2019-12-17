@@ -5,6 +5,8 @@ title: Final Report
 
 ## Video
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/LftUoT-Qm9k" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Project Summary
 The goal of this project is to use reinforcement learning methods to teach a Minecraft bot how to herd sheep. In particular, we chose to leverage tabular q-learning and deep q-learning to teach the agent how to efficiently gather a number of sheep in an arena and lead them to a designated pen on the outside of the arena. The reason for this is to bolster the difficulty of a trivial problem to one that requires methods and insights beyond that of a programmatic solution, much like a real world situation. More realistic situations could possibly include different kinds of terrain, time constraints; finishing before nightfall to avoid mobs, and larger distances. In the final phase of our project, we used a deterministic and discrete environment with sheep positions and map dimensions consistent. However, sheep behavior is technically dynamic for two reasons. They can be lured with wheat but can choose to ignore wheat. Sheep may also move around aimlessly and end up at different locations than where they were spawned.
 
@@ -91,7 +93,21 @@ The number of times our agent "wins" was also a clear evaluation criteria we imp
 
 For qualitative results, we looked at how intelligently our agent was able to factor in sheep distance compared to distance to pen. We also looked at how our agent was able to handle herding multiple sheep--whether it settled for a smaller reward of only bringing one sheep per mission, or if it tried to herd all the sheep in the world at once and herd them in together for a larger sum reward. Our agent opted for smaller rewards herding less sheep most of the time, most likely because we put a time constraint of 35s to finish each mission run. Overall, we saw this as a success in that the agent was still able to perform the baseline task of herding a sheep into a pen. 
 
-
+<img src="reward.png" alt="traning result" width="500">
+**Reward versus training episode**
+<br>
+<img src="time.png" alt="traning result" width="500">
+**mission time versus training episode**
+<br>
+<img src="1.png" alt="traning result" width="500">
+**agent move space with episode #1**
+<br>
+<img src="275.png" alt="traning result" width="500">
+**agent move space of episode #275**
+<br>
+<img src="899.png" alt="traning result" width="500">
+**agent move space of episode #899**
+<br>
 
 ## Refrences 
 https://keon.io/deep-q-learning/?fbclid=IwAR0DftZDBhpV05C9wql3Yfu4GnI-T4G045xp3Q7lQhDDkvrkInenFRNKyRk
